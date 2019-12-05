@@ -1,0 +1,1 @@
+for i in $(seq 245182 790572); do if [[ ${i:0:1} -lt 2 ]]; then echo $i; fi ;done

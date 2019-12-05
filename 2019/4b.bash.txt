@@ -1,0 +1,4 @@
+while read i; do echo $i| sed 's/\(.\)/\1\n/g'|sed "/^$/d"|uniq -c|egrep -q "^\s+2\s" && echo $i|tee -a 4br.txt; done < 4ar.txt
+ wc -l 4br.txt 
+710 4br.txt
+

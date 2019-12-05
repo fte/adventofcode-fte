@@ -1,0 +1,6 @@
+while read i; do echo "$i/3-2" |bc |tee -a 1a; done < 1.input
+paste -s -d+ 1a |bc
+
+aoc1() { last=$(echo "$1/3-2"|bc); if [[ $last -ge 0 ]]; then echo -n "+$last" && aoc1 $last; fi }
+while read i;do aoc1 $i|tee -a 1b;done < 1.input 
+echo `cat 1b|sed "s/^\+//"`|bc
