@@ -1,7 +1,6 @@
 #!/usr/bin/env julia
 
 using LightGraphs
-using GraphPlot
 
 map_raw= readlines(ARGS[1])
 
