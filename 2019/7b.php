@@ -35,21 +35,41 @@ foreach ( $aNomsAmplis as $nom ) {
 
 
 $stdout=0;
+// $sequence= array(9,8,7,6,5);
+// $sequence= array(4,3,2,1,0);
+$sequence= array(9,8,7,6,5);
+$sequence= [9,7,8,5,6];
+foreach( $sequence as $num_amp =>$seq ) {
+    $nom_amp= $aNomsAmplisAssoc[$num_amp];
+    echo implode($sequence)." ampli=$nom_amp num_sequence=$seq entree=$stdout";
+    fwrite($pipes[$nom_amp][0], "$seq\n$stdout\n");
+    $stdout= fread($pipes[$nom_amp][1], 1024);
+    echo " sortie=$stdout\n";
+}
+
 while(true) {
-    $sequence= array(9,8,7,6,5);
+    
     foreach( $sequence as $num_amp =>$seq ) {
         $nom_amp= $aNomsAmplisAssoc[$num_amp];
-        echo implode($sequence)." $nom_amp $seq $stdout\n";
         $status= proc_get_status($procs[$nom]); // print_r($status);
-        // echo $status['running']."\n";
-        if($status['running'] != 1) {
-            // echo $stdout."\n";
-            // break 1;
-            exit(0); // trouve le gros
-        }
-        fwrite($pipes[$nom_amp][0], "$seq\n$stdout\n");
+        $running= $status['running'];
+        echo implode($sequence)." ampli=$nom_amp entree=$stdout";
+        fwrite($pipes[$nom_amp][0], "$stdout\n");
+        $status= proc_get_status($procs[$nom]); // print_r($status);
+        $running= $status['running'];
+        // if($status['running'] != 1) {
+        //     break 1;
+        // }
         $stdout= fread($pipes[$nom_amp][1], 1024);
-        // echo $stdout."\n";
+        // if(!$stdout) {
+        //     break 1;
+        // }
+        echo " sortie=$stdout\n";
+        if(!$stdout) {
+            break 2;
+        }
+        // var_dump($stdout);
+
     }
 }
 
@@ -60,35 +80,3 @@ foreach ( $aNomsAmplis as $nom ) {
     $exit_status = proc_close($procs[$nom]);
     // echo "$nom : $exit_status\n";
 }
-
-
-/*
-socat -lmlocal2  tcp-listen:12071,reuseaddr,fork exec:'./5b.php "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"' &
-socat -lmlocal2  tcp-listen:12072,reuseaddr,fork exec:'./5b.php "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"' &
-socat -lmlocal2  tcp-listen:12073,reuseaddr,fork exec:'./5b.php "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"' &
-socat -lmlocal2  tcp-listen:12074,reuseaddr,fork exec:'./5b.php "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"' &
-socat -lmlocal2  tcp-listen:12075,reuseaddr,fork exec:'./5b.php "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"' &
-
-rm -f all;
-# shuf -e {5..9}{5..9}{5..9}{5..9}{5..9}|grep -vE "(.).*\1{1,}"| sed -E "s/(.)/\1 /g" |while read a b c d e; do
-# echo "9 8 7 6 5"|while read a b c d e; do
-echo "9 7 8 5 6"|while read a b c d e; do
-    out=$({ echo $a; echo "0"; } | nc localhost 12071)
-    echo $out;
-    # out=$({ echo $b; echo $out; } | nc localhost 12072)
-    # echo $out;
-    # out=$({ echo $c; echo $out; } | nc localhost 12073)
-    # echo $out;
-    # out=$({ echo $d; echo $out; } | nc localhost 12074)
-    # echo $out;
-    # out=$({ echo $e; echo $out; } | nc localhost 12075)
-    # echo $out;
-    # for i in {1..5};do
-    #     out=$(echo $out | nc localhost "1207${i}")
-    #     echo $out;
-    #     # echo "$!";
-    # done
-done
-# cat all | sort -nr |head -n 1
-# sort -n output | tail -1
-*/
