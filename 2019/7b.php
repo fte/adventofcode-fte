@@ -3,6 +3,39 @@
 array_shift($argv);
 $programme= $argv[0];
 
+
+// https://stackoverflow.com/questions/5506888/permutations-all-possible-sets-of-numbers
+// like bash shuf -e {5..9}{5..9}{5..9}{5..9}{5..9}|grep -vE "(.).*\1{1,}"| sed -E "s/(.)/\1 /g"
+function permutations($input, $path){  
+    // base case 1
+    if(count($input) == 0){
+      return [$path];
+    }
+  
+    $output = [];
+    foreach($input as $index => $num){     # 1, 2,3, 4
+      $copyPath = $path; # copy the path - []
+      $copyPath[] = $num;  # append the number [1]
+  
+      # remove the current number
+      $inputLocal = $input; 
+      unset($inputLocal[$index]); # [2, 3, 4]       
+      $permute = permutations($inputLocal, $copyPath); # call [2, 3, 4], [1]
+  
+      # for all element find add to output
+      foreach($permute as $ele){
+        # filter ouput
+        // $output[] = filterElement($ele);    
+        $output[]= $ele;
+      }
+    }
+  
+    return $output;
+}
+
+$permuts= permutations([9,8,7,6,5], []);
+
+
 $descriptorspec = array(
     0 => array("pipe", "r"),
     1 => array("pipe", "w"),
@@ -33,12 +66,15 @@ foreach ( $aNomsAmplis as $nom ) {
 }
 
 
-
+foreach($permuts as $sequence) {
+    print_r($sequence);
+}
 $stdout=0;
+
 // $sequence= array(9,8,7,6,5);
 // $sequence= array(4,3,2,1,0);
-$sequence= array(9,8,7,6,5);
-$sequence= [9,7,8,5,6];
+// $sequence= array(9,8,7,6,5);
+// $sequence= [9,7,8,5,6];
 foreach( $sequence as $num_amp =>$seq ) {
     $nom_amp= $aNomsAmplisAssoc[$num_amp];
     echo implode($sequence)." ampli=$nom_amp num_sequence=$seq entree=$stdout";
