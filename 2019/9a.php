@@ -1,123 +1,27 @@
 #!/usr/bin/php -q
 <?php
+/**
+ * Intcode
+ */
+require dirname(__FILE__).'/IntCode.php';
+
 array_shift($argv);
-$aIntCodes= preg_split('#,#',$argv[0]);
+$aIntCodes= preg_split('#,#', $argv[0]);
 
-$position= 0;
-$relative_base= 0;
-while (99 != $aIntCodes[$position]) {
-    $pointeur=0;
-    $opcode_raw= str_pad($aIntCodes[$position],5,0,STR_PAD_LEFT);
-    // echo "ocr=$opcode_raw\n";
-    $opcode= (int) substr($opcode_raw, -2);
-    $aModes= array_reverse(str_split(substr($opcode_raw,0,3)));
-    // echo "opcode=$opcode\n";
-    // print_r($aModes);
-    if(in_array($opcode, array(1,2,5,6,7,8))) {
-        $p1= $aIntCodes[$position+1];
-        $p2= $aIntCodes[$position+2];
+$intcode= new IntCode($aIntCodes, array(1));
+// $intcode= new IntCode($aIntCodes);
+$out= array();
 
-        if ($aModes[0] == 1) {
-            $v1= $p1;
-        } elseif ($aModes[0] == 2) {
-            $v1= $aIntCodes[$relative_base+$p1];
-        } else {
-            $v1= $aIntCodes[$p1];
-        }
-        // $v1= ($aModes[0] == 1) ? $p1 : $aIntCodes[$p1];   
-        if ($aModes[1] == 1) {
-            $v2= $p2;
-        } elseif ($aModes[1] == 2) {
-            $v2= $aIntCodes[$relative_base+$p2];
-        } else {
-            $v2= $aIntCodes[$p2];
-        }
-        // $v2= ($aModes[1] == 1) ? $p2 : $aIntCodes[$p2];
-        // echo $p1."(".(int)$aModes[0]."):$v1 [+*] ".$p2."(".(int)$aModes[1]."):$v2\n";
-    } elseif(in_array($opcode, array(4))) {
-        $p1= $aIntCodes[$position+1];
-        if ($aModes[0] == 1) {
-            $v1= $p1;
-        } elseif ($aModes[0] == 2) {
-            $v1= $aIntCodes[$relative_base+$p1];
-        } else {
-            $v1= $aIntCodes[$p1];
-        }
-        // $v1= ($aModes[0] == 1) ? $p1 : $aIntCodes[$p1];
-    } else {
-        $p1= $aIntCodes[$position+1];
-    }
-    $new_position= $position;
-    switch ($opcode) {
-        case '1':
-            $position_cible= $aIntCodes[$position+3];
+$i=0;
+do {
+    $i+=1;
+    // echo "i=$i\n";
+    $output= $intcode->compute();
+    echo " output=$output\n";
+    $out[] = $output;
 
-            $res=  $v1 + $v2;
-            $aIntCodes[$position_cible]= $res;
-            $pointeur=4;
-            break;
-        case '2':
-            $position_cible= $aIntCodes[$position+3];
+    // if($intcode->position < 300) die();
 
-            $res=  $v1 * $v2;
-            $aIntCodes[$position_cible]= $res;
-            $pointeur=4;
-            break;
-        case '3':
-            $p1= $aIntCodes[$position+1];
-            $aIntCodes[$p1]= readline('?');
-            $pointeur=2;
-            break;
-        case '4':
-            $p1= $aIntCodes[$position+1];
-            $v1= ($aModes[0] == 1) ? $p1 : $aIntCodes[$p1]; 
-            echo $v1;
-            $pointeur=2;
-            break;
-        case '5':
-            if ($v1 != 0) {
-                $new_position= $v2;
-            } else {
-                $pointeur=3;
-            }
-            break;
-        case '6':
-            if ($v1 == 0) {
-                $new_position= $v2;
-            } else {
-                $pointeur=3;
-            }
-            break;
-        case '7':
-            $position_cible= $aIntCodes[$position+3];
+} while ($output !== null);
 
-            if ($v1 < $v2) {
-                $aIntCodes[$position_cible]= 1;
-            } else {
-                $aIntCodes[$position_cible]= 0;
-            }
-            $pointeur=4;
-            break;
-        case '8':
-            $position_cible= $aIntCodes[$position+3];
-
-            if ($v1 == $v2) {
-                $aIntCodes[$position_cible]= 1;
-            } else {
-                $aIntCodes[$position_cible]= 0;
-            }
-            $pointeur=4;
-            break;
-        case '9':
-            $relative_base+= $p1;
-            $pointeur=2;
-            break;
-        default:
-            break;           
-    }
-    if($new_position == $position) {
-        $position+= $pointeur;
-    } else {
-        $position= $new_position;
-    }
-}
+echo implode('', $out);
