@@ -80,7 +80,6 @@ lastVaporizedAng= -1
 # print('(11,14)',asteroids[(11,14)])
 # print('(19,14)',asteroids[(19,14)])
 
-toVaporize= []
 while asteroids:
     # print('len', len(asteroids))
     # print(asteroids)
