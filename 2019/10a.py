@@ -13,7 +13,7 @@ def get_hémorroïdes():
 
 hémorroïdes= list(get_hémorroïdes())
 
-def angle(aster1, aster2):
+def get_angle(aster1, aster2):
     # print('1',aster1, ' ', end='')
     # print('2',aster2, ' ', end='')
     # Avec le ratio on calcule l'angle
@@ -30,7 +30,7 @@ for a1 in hémorroïdes:
     # angles= {}
     for a2 in hémorroïdes:
         if a1 != a2:
-            ang= angle(a1,a2)
+            ang= get_angle(a1,a2)
             angles.add(ang)
             # angles[hash(round(ang, 4))]+=1
     nb_visibles= len(angles)
