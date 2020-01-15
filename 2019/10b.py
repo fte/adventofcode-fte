@@ -20,14 +20,6 @@ def get_angle(aster1, aster2):
         return 360 + θdeg
     return θdeg
 
-def bimbamboum(point, distByPos, anglesByPos, i):
-    print(i,' vaporized-> x:{} y:{}'.format(*point))
-    if a in distByPos:
-        del(distByPos[a])
-    if a in anglesByPos:
-        del(anglesByPos[a])
-
-
 max= 0
 for a1 in hémorroïdes:
     angles= set()
