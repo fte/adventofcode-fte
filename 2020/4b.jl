@@ -7,7 +7,10 @@ function isPpValid(fields_pp)
 
     fields_presents = filter(x -> haskey(fields_pp, x), obligatoires)
     bMandatFields = (length(fields_presents) == length(obligatoires))
-
+    if (bMandatFields === false) 
+        return false
+    end
+    
     if (occursin(r"^\d{4}$", fields_pp["byr"]) 
         && parse(Int, fields_pp["byr"]) >= 1920
         && parse(Int, fields_pp["byr"]) <= 2002 ) 
@@ -32,16 +35,28 @@ function isPpValid(fields_pp)
         bEyr = false
     end
 
-    bPid=  occursin(r"^\d{9}$", fields_pp["pid"]) 
+    bPid =  occursin(r"^\d{9}$", fields_pp["pid"]) 
 
     # println(fields_pp["hcl"],' ', occursin(r"^#\w{6}$", fields_pp["hcl"]))
-    bHcl= occursin(r"^#\w{6}$", fields_pp["hcl"]) 
+    bHcl = occursin(r"^#\w{6}$", fields_pp["hcl"]) 
 
     # println(fields_pp["ecl"], fields_pp["ecl"] in split("amb blu brn gry grn hzl oth"))
     bEcl = fields_pp["ecl"] in split("amb blu brn gry grn hzl oth")
 
+    m = match(r"(\d+)(\w.*)", fields_pp["hgt"])
+    # println(m.match)
+    # println(m.captures[1], ' ', typeof(m.captures[1]))
+    # println(m.captures[2], ' ', typeof(m.captures[2]))
+    if ( m.captures[2] == "cm" && parse(Int, m.captures[1]) >= 150 && parse(Int, m.captures[1]) <= 193)
+        bHgt = true
+    elseif (m.captures[2] == "in" && parse(Int, m.captures[1]) >= 59 && parse(Int, m.captures[1]) <= 76)
+        bHgt = true
+    else
+        bHgt = false
+    end
+
     # return bMandatFields & bByr & bIyr & bEyr & bPid & bHcl & bEcl
-    return bMandatFields & bByr & bIyr & bEyr & bPid & bHcl
+    return bByr & bIyr & bEyr & bPid & bHcl & bEcl & bHgt
 end
 
 
