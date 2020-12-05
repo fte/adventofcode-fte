@@ -12,7 +12,7 @@ for l in mdp
     meule= tmp[3]
     # println(pos1,' ',pos2, ' ',aiguille,' ', meule)
     # println(meule[pos1],' ',meule[pos2], ' ',aiguille,' ', meule)
-    bPos2 = (aiguille == meule[pos1])
+    bPos1 = (aiguille == meule[pos1])
     bPos2 = (aiguille == meule[pos2])
 
     if (xor(bPos1, bPos2))
