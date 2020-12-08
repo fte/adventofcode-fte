@@ -33,8 +33,11 @@ iSg = findfirst(x -> x == "shiny gold", toutesLesCouleurs)
 # println("iSg=",iSg)
 # println("ntlc=",length(toutesLesCouleurs))
 for i in keys(toutesLesCouleurs)
+    if i == iSg
+        continue
+    end
     if has_path(g, iSg, i) # renvoi true si il a un chemin en iSg et i
         global nbCouleurs += 1
     end
 end
-println(nbCouleurs - 1)
+println(nbCouleurs)
