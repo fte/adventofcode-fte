@@ -3,7 +3,6 @@
 reponses = split(chomp(read(ARGS[1], String)), "\n\n")
 # println(reponses)
 
-nbYesByChar = Dict{Char,Int}()
 global total = 0 
 a2z= "abcdefghijklmnopqrstuvwxyz"
 for groupe in reponses

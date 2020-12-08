@@ -28,4 +28,7 @@ $ ./3b.jl 3.txt
 
 ....
 ```
-
+or :
+```
+j=`date +'%-d'`;for i in `seq 1 ${j}`;do echo "day $i: " ; ./${i}a.jl $i.txt && ./${i}b.jl $i.txt;done
+```
