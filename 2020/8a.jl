@@ -7,7 +7,6 @@ function execute(bootcode)
     pointeur_instruction = 1 
     pile = Set() # pile des adresses des instructions deja executeesI
     while pointeur_instruction ∉ pile
-        pi = pointeur_instruction
         push!(pile, pointeur_instruction)
     
         instruction, adresse = bootcode[pointeur_instruction]
