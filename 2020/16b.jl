@@ -32,7 +32,7 @@ for (nt, ticket) in enumerate(nearbytickets)
         end
     end
 end
-deleteat!(nearbytickets, notvalids)
+deleteat!(nearbytickets, notvalids) # discard those invalid tickets
 # println(nearbytickets)
 
 # filter!(p -> startswith(p.first, "departure"), rules)
@@ -67,13 +67,14 @@ for nv in 1:length(nearbytickets[1])
 
     end
 end
+
 # println(fieldsValid)
 fieldsPos = Dict()
 iTotalTickets = length(nearbytickets)
 for (f, v) in fieldsValid
     d = Dict([(i, count(x -> x == i, v)) for i in v])
     for (i, v) in d
-        if v < iTotalTickets
+        if v < iTotalTickets 
             delete!(d, i)
         end
     end
@@ -99,7 +100,7 @@ while length(fields) < iTotalFields
     # println(fields, ' ', length(fields), " ", iTotalFields, ' ', posAttrib)
 end
 # println(fields)
-filter!(p -> startswith(p.first, "departure"), fields)
+filter!(p -> startswith(p.first, "departure"), fields) #que les fie
 # println(fields)
 mul = 1
 # println(myticket)
