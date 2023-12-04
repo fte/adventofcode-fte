@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"unicode"
 	"strconv"
+	"unicode"
 )
+
+// func convChiffresToInt()
 
 func main() {
 	// file, err := os.Open("input1a.test.txt")
@@ -26,22 +28,22 @@ func main() {
 		var premierChiffre, dernierChiffre rune
 		for _, char := range line {
 			if unicode.IsDigit(char) {
-				if(premierChiffre == 0) {
+				if premierChiffre == 0 {
 					premierChiffre = char
 				}
-				dernierChiffre= char //remplacé jusqu'au dernier
+				dernierChiffre = char //remplacé jusqu'au dernier
 			}
 		}
 
 		// fmt.Println(string(premierChiffre)+string(dernierChiffre))
-		resultat, err := strconv.Atoi(string(premierChiffre)+string(dernierChiffre))
+		resultat, err := strconv.Atoi(string(premierChiffre) + string(dernierChiffre))
 		if err != nil {
 			fmt.Println("Erreur de conversion en entier :", err)
 			return
 		}
 		somme = somme + resultat
 		// fmt.Println("resultat",resultat)
-		fmt.Println("resultat",somme)
+		fmt.Println("resultat", somme)
 
 	}
 
