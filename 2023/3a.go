@@ -2,13 +2,6 @@ package main
 
 // Matrix
 // "Let off some steam, Bennett."
-// "Any carry-on luggage?" "Just him." "Open your mouth again and I'll nail it shut."
-// "Don't break radio silence until they see me." "How will I know?" "Because all fucking hell is going to break loose."
-// "Why don't they just call him Girl George? It would cut down on the confusion." "Oh, Dad, that is so old." "Ha Ha. You know when I was a boy and rock and roll came to East Germany, the communists said it was subversive. Maybe they were right."
-// "This was the last time." "Until a next time." "No chance."
-// "You steal my car, you rip the seat out, you kidnap me, you ask me to help you find your daughter which I very kindly do, and then you get me involved in a shoot out where people are dying and there's blood spurting all over the place, and then I watch you rip a phone booth out of a wall, swing from the ceiling like Tarzan, and then there's a cop that's going to shoot you and I save you and they start chasing me. Are you going to tell me what's going on or what?" "No." "No? NO!?"
-// "Don't disturb my friend, he's dead tired."
-// "We'll take Cooke's car. He won't be needing it."
 
 import (
 	"bufio"
@@ -19,13 +12,13 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("input3a.test.txt")
+	file, _ := os.Open("input3a.txt")
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	var somme int
 	var y int
-	dxmax := 10
-	dymax := 10
+	dxmax := 140
+	dymax := 140
 	matrix := make([][]string, dymax)
 	for i := range matrix {
 		matrix[i] = make([]string, dxmax)
@@ -41,27 +34,34 @@ func main() {
 	}
 	dirs := [][]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
 	// fmt.Println(dirs)
-
+	sNombre := ""
+	iKeepNombre := false
 	for y := range matrix {
-		var sNombre string
-		var iKeepNombre bool
-		iKeepNombre = false
+		if len(sNombre) > 0 && iKeepNombre {
+			nombre, _ := strconv.Atoi(sNombre)
+			somme += nombre
+			fmt.Println("sommexxxy", somme, "num", nombre)
+			sNombre = ""
+			iKeepNombre = false
+		}
 		for x := range matrix[y] {
-			// fmt.Print(matrix[x][y])
-			if "." == matrix[x][y] {
+			isChiffre, _ := regexp.Match(`\d`, []byte(matrix[x][y]))
+			// fmt.Println(x, y, matrix[x][y], "isChiffre=", isChiffre)
+			if !isChiffre {
 				if iKeepNombre {
 					nombre, _ := strconv.Atoi(sNombre)
 					// fmt.Println(nombre)
 					somme += nombre
-					fmt.Println("somme", somme, "num", nombre)
+					fmt.Println("sommexxx", somme, "num", nombre)
 				}
 				sNombre = ""
 				iKeepNombre = false
 				continue
 			}
-			isChiffre, _ := regexp.Match(`\d`, []byte(matrix[x][y]))
+			// fmt.Println("x", x, "y", y, "char", matrix[x][y], "isChiffre", isChiffre)
 			if isChiffre {
 				sNombre += matrix[x][y]
+				// fmt.Println("x", x, "y", y, "char", matrix[x][y], "isChiffre", isChiffre, "sNombre", sNombre)
 				for _, dxdy := range dirs {
 					// fmt.Println("dx", dxdy[0], "dy", dxdy[1])
 					nx := x + dxdy[0]
@@ -74,9 +74,9 @@ func main() {
 							// fmt.Println("spe=", matrix[nx][ny], "keep=", iKeepNombre, "snb=", sNombre, "somme", somme)
 							continue
 						}
-
 					}
 				}
+
 			}
 
 		}
